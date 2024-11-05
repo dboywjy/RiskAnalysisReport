@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ report_title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        h1, h2, h3, h4 {
+            margin-top: 20px;
+        }
+        table {
+            margin-top: 20px;
+            width: 100%;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ report_title }}</h1>
+        <p><strong>Prepared by:</strong> {{ prepared_by }}</p>
+        <p><strong>Prepared for:</strong> {{ prepared_for }}</p>
+        <p><strong>Report Generated on:</strong> {{ report_generated }}</p>
+        <p><strong>Analysis as of:</strong> {{ analysis_as_of }}</p>
+
+        <h2>Executive Summary</h2>
+        <p>{{ executive_summary }}</p>
+
+        <h2>Performance Analysis</h2>
+        <h3>Asset Allocation</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Holding</th>
+                    <th>Percentage (current)</th>
+                    <th>Contribution (1 Mo)</th>
+                    <th>Maximum Drawdown (1 mo)</th>
+                    <th>Volatility (1 Mo)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for holding in asset_allocation %}
+                <tr>
+                    <td>{{ holding.name }}</td>
+                    <td>{{ holding.percentage }}%</td>
+                    <td>{{ holding.contribution }}%</td>
+                    <td>{{ holding.max_drawdown }}%</td>
+                    <td>{{ holding.volatility }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
