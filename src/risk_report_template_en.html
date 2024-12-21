@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Risk Report</title>
+</head>
+<body>
+    <header>
+        <h1>Portfolio Analysis Report</h1>
+        <p>Prepared by AFE-N2N Client Service Group</p>
+        <p>Prepared for: <span id="client-name">{{ client_name }}</span></p>
+        <p>Report Generated on: <span id="report-date">{{ report_date }}</span></p>
+        <p>Analysis as of: <span id="analysis-date">{{ analysis_date }}</span></p>
+    </header>
+
+    <main>
+        <section id="Summary">
+            <h2>Summary</h2>
+            <p>This is an analysis for your portfolio to give an overview of current holding and historical performance. </p>
+            <p>If your holding takes up less than 1% of the total value, it would not be present in the figures below. But is would still be present in the charts to give details about holding.</p>
+
+        </section>
+
+        <section id="holding-analysis">
+            <h2>Cash and Securities</h2>
+            <img src="figures/asset_allocation_comparison.png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <img src="figures/currency_holding_percentages.png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categories</th>
+                        <th>Last month percentage</th>
+                        <th>Current month percentage</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in assetAllocation %}
+                    <tr>
+                        <td>{{ item["categories"] }}</td>
+                        <td>{{ item['last month'] }}</td>
+                        <td>{{ item['current'] }}</td>
+                        <td>{{ item['difference'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <img src="figures/Holding_historical_performance(cumulative).png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>instrument</th>
+                        <th>percentage</th>
+                        <th>gross_return(1m)</th>
+                        <th>max drawdown(1m)</th>
+                        <th>volatility(1m)</th>
+                        <th>gross_return(3m)</th>
+                        <th>max drawdown(3m)</th>
+                        <th>volatility(3m)</th>
+                        <th>gross_return(6m)</th>
+                        <th>max drawdown(6m)</th>
+                        <th>volatility(6m)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in riskmetric %}
+                    <tr>
+                        <td>{{ item["instrument"] }}</td>
+                        <td>{{ item["percentage"] }}</td>
+                        <td>{{ item['gross_return(1m)'] }}</td>
+                        <td>{{ item['max drawdown(1m)'] }}</td>
+                        <td>{{ item['volatility(1m)'] }}</td>
+                        <td>{{ item['gross_return(3m)'] }}</td>
+                        <td>{{ item['max drawdown(3m)'] }}</td>
+                        <td>{{ item['volatility(3m)'] }}</td>
+                        <td>{{ item['gross_return(6m)'] }}</td>
+                        <td>{{ item['max drawdown(6m)'] }}</td>
+                        <td>{{ item['volatility(6m)'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+        <section id="market-risk">
+            <h2>Market Risk</h2>
+            <img src="figures/historicalQuater.png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>instrument</th>
+                        <th>percentage</th>
+                        <th>VaR</th>
+                        <th>CVaR</th>
+                        <th>risk_contribution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in marketrisk %}
+                    <tr>
+                        <td>{{ item["instrument"] }}</td>
+                        <td>{{ item["percentage"] }}</td>
+                        <td>{{ item['VaR'] }}</td>
+                        <td>{{ item['CVaR'] }}</td>
+                        <td>{{ item['risk_contribution'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>The risk level of you is {{risk_level}}</p>
+        </section>
+
+        <section id="liquidity-risk">
+            <h2>Liquidity Risk</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>instrument</th>
+                        <th>ADTV</th>
+                        <th>Holding</th>
+                        <th>Holding/ADTV</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in adtv %}
+                    <tr>
+                        <td>{{ item["instrument"] }}</td>
+                        <td>{{ item["ADTV"] }}</td>
+                        <td>{{ item['Holding'] }}</td>
+                        <td>{{ item['Holding/ADTV'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <section id="concentration-risk">
+            <h2>Concentration Risk</h2>
+            <img src="figures/EquitiesStyle.png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <img src="figures/EquitiesGICS.png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <!-- <img src="figures/EquitiesCR.png" alt="Sine Wave" style="max-width: 100%; height: auto;"> -->
+            <p>{{ concentration_risk }}</p>
+        </section>
+
+        <section id="correlation-risk">
+            <h2>Correlation and Tail Risk</h2>
+            <img src="figures/corr.png" alt="Sine Wave" style="max-width: 100%; height: auto;">
+            <p>{{ correlation_risk }}</p>
+        </section>
+
+        <section id="Risk-Disclosures">
+            <h2>Risk Disclosures</h2>
+            <p>This report helps you better understand the risks within your portfolios held at AFE-N2N and at other financial institutions which you may have shared with us. This report presents portfolio characteristics, as well as estimates of portfolio volatility and stress test results. The report estimates volatility by analyzing the positions in your portfolio. Commonly, the higher the volatility, the riskier is the security or portfolio. Stress testing is available to illustrate how your portfolio might react under a certain market scenario or set of events. </p>
+            <p>The purpose of the Suitability Benchmark is to assist you in understanding the risk in your portfolio referenced in this report against your stated risk profile. The Suitability Benchmark may be different than the one used to compare your portfolio performance.</p>
+            <p>The Report allows you to review and compare the results of the Risk Analysis of your Current Portfolio against a Suitability Benchmark, and hypothetical Alternate Portfolio, if depicted, of positions that you may or may not own, or may not own in the same quantities. The Alternate Portfolio, if depicted in this report, including the asset allocation and particular securities in the Alternate Portfolio, are hypothetical illustrations only.</p>
+            <p>AFE-N2N is not recommending that you adopt the hypothetical Alternate Portfolio shown in this Report or any of its components. Rather, we are presenting it so that you have a basis for comparison when you consider the risk characteristics of your current holdings. After discussing with you the analyses in this Report, and your ability and willingness to take risk, your Financial Advisor can work with you to construct a portfolio that meets your needs.</p>
+            <p>The Hypothetical Results Illustrated in this Report for Your Current Portfolio and/or Alternate Portfolio are not and should NOT be construed as a guarantee of future performance. The factor models used to generate these results may contain errors or faulty assumptions.</p>
+            <p>Please refer to the Important Disclosures and Glossary at the end of this Report for additional information, including a description of the assumptions and methodologies used throughout and definitions of key terminology.</p>
+        </section>
+
+    </main>
+</body>
+</html>
