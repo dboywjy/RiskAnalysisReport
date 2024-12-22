@@ -15,93 +15,74 @@ sf.main()
 toHTML.main(currentTime=currentTime, json_file='./outputJson/out.json', language="en")
 
 
-# import uvicorn
-# from fastapi import FastAPI, UploadFile, File
-# from fastapi.responses import JSONResponse, HTMLResponse
-# import json
+
+
+###############################################################################################################
 # import generateJson
 # import plotSave
 # import toHTML
 # import warnings
-# from datetime import datetime
-# from typing import Optional
-
 # warnings.filterwarnings('ignore')
+# from fastapi import FastAPI
+# from pydantic import BaseModel
+# import uvicorn
+# import pandas as pd
+# import json
+# from typing import Dict, Any
 
+# # 创建FastAPI实例
 # app = FastAPI()
 
-# @app.post("/process")
-# async def process_data(current_time: Optional[str] = None, language: str = "en"):
-#     try:
-#         # Use provided time or default to current time
-#         if not current_time:
-#             current_time = datetime.now().strftime('%Y-%m-%d')
+# # 创建API端点
+# @app.post("/process/")
+# async def process_data(json_data: Dict[str, Any]):
+#     # 获取参数和JSON数据
+#     # print(f"currentTime: {currentTime}")
+#     # print(f"language: {language}")
+#     # print(f"JSON数据: {request_data.data}")
+#     currentTime = json_data["currentTime"]
+#     language = json_data["language"]
+#     # clientInfo = pd.DataFrame(json_data["clientInfo"])
+#     clientInfo = json.loads(json_data["clientInfo"])
+#     clientInfo = pd.DataFrame(clientInfo)
+#     clientInfo.to_json("./inputdata/clientInfo.json", orient="records", force_ascii=False, indent=4)
 
-#         # Generate JSON
-#         gs = generateJson.generateJson(currentTime=current_time)
-#         gs.main()
+#     gs = generateJson.generateJson(currentTime=currentTime)
+#     gs.main()
 
-#         # Save figures
-#         sf = plotSave.saveFig(jsonPath='./outputJson/out.json')
-#         sf.main()
+#     sf = plotSave.saveFig(jsonPath='./outputJson/out.json')
+#     sf.main()
 
-#         # Generate HTML
-#         html_content = toHTML.main(
-#             currentTime=current_time, 
-#             json_file='./outputJson/out.json', 
-#             language=language
-#         )
-
-#         return HTMLResponse(content=html_content, media_type="text/html")
-
-#     except Exception as e:
-#         return JSONResponse(
-#             content={"error": f"Processing failed: {str(e)}"}, 
-#             status_code=500
-#         )
-
-# @app.post("/upload-and-process")
-# async def upload_and_process(
-#     file: UploadFile = File(...),
-#     current_time: Optional[str] = None,
-#     language: str = "en"
-# ):
-#     try:
-#         if not file.filename.endswith('.json'):
-#             return JSONResponse(
-#                 content={"error": "Please upload a JSON file"}, 
-#                 status_code=400
-#             )
-
-#         # Save uploaded file
-#         contents = await file.read()
-#         with open('./outputJson/out.json', 'wb') as f:
-#             f.write(contents)
-
-#         # Use provided time or default to current time
-#         if not current_time:
-#             current_time = datetime.now().strftime('%Y-%m-%d')
-
-#         # Save figures
-#         sf = plotSave.saveFig(jsonPath='./outputJson/out.json')
-#         sf.main()
-
-#         # Generate HTML
-#         html_content = toHTML.main(
-#             currentTime=current_time, 
-#             json_file='./outputJson/out.json', 
-#             language=language
-#         )
-
-#         return HTMLResponse(content=html_content, media_type="text/html")
-
-#     except Exception as e:
-#         return JSONResponse(
-#             content={"error": f"Processing failed: {str(e)}"}, 
-#             status_code=500
-#         )
+#     toHTML.main(currentTime=currentTime, json_file='./outputJson/out.json', language="en")
+#     return {"status": "success"}
 
 # if __name__ == "__main__":
-#     config = uvicorn.Config("main:app", host='0.0.0.0', port=8080)
-#     server = uvicorn.Server(config)
-#     server.run()
+#     # 启动服务器
+#     uvicorn.run(app, host="127.0.0.1", port=8000)
+
+###############################################################################################################
+### testing
+# import requests
+# import pandas as pd
+# import json
+
+# # URL中的路径参数: 
+# # - user_id = "12345"
+# # - action = "update"
+# url = "http://127.0.0.1:8000/process"
+# # ?currentTime=2024-11-10&language=en"
+# clientInfo = pd.read_json("./inputData/clientInfo.json")
+# clientInfo = clientInfo.to_dict('records')
+# clientInfo = json.dumps(clientInfo, ensure_ascii=False)
+
+# # currentTime = "2024-11-10"
+# # language = "en"
+
+# json_data = {
+#     "currentTime": "2024-11-10",
+#     "language": "en",
+#     "clientInfo": clientInfo
+# }
+
+# response = requests.post(url, json=json_data)
+# print(response.json())
