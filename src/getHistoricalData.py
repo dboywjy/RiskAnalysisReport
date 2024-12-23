@@ -36,7 +36,7 @@ class StockDataFetcher:
         """Obtain AuthKey"""
         data = {
             "SiteID": "",
-            "ProdID": "RR"
+            "ProdID": ""
         }
         response = requests.post(self.auth_url, data=data)
         if response.status_code == 200:

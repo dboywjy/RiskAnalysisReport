@@ -1,18 +1,23 @@
 import requests
 import pandas as pd
+import json
 
 # URL中的路径参数: 
 # - user_id = "12345"
 # - action = "update"
 url = "http://127.0.0.1:8000/process"
-
+# ?currentTime=2024-11-10&language=en"
 clientInfo = pd.read_json("./inputData/clientInfo.json")
+clientInfo = clientInfo.to_dict('records')
+clientInfo = json.dumps(clientInfo, ensure_ascii=False)
 
-# JSON数据在请求体中
+# currentTime = "2024-11-10"
+# language = "en"
+
 json_data = {
-    "currentTime": "张三",
+    "currentTime": "2024-11-10",
     "language": "en",
-    "request_data": clientInfo
+    "clientInfo": clientInfo
 }
 
 response = requests.post(url, json=json_data)
